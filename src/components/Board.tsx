@@ -11,14 +11,18 @@ import {
   Typography,
 } from "@mui/material";
 import {
+  CollisionDetection,
   DndContext,
+  DropAnimation,
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   UniqueIdentifier,
-  closestCorners,
+  pointerWithin,
+  rectIntersection,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -164,14 +168,37 @@ export default function Board() {
   );
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 4,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 120,
+        tolerance: 8,
       },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
+  );
+
+  const collisionDetection = useCallback<CollisionDetection>((args) => {
+    const pointerCollisions = pointerWithin(args);
+    if (pointerCollisions.length) {
+      return pointerCollisions;
+    }
+
+    return rectIntersection(args);
+  }, []);
+
+  const dropAnimation = useMemo<DropAnimation>(
+    () => ({
+      duration: 180,
+      easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+    }),
+    [],
   );
 
   const openCreateDialog = (column: TaskColumn) => {
@@ -403,7 +430,7 @@ export default function Board() {
 
         <DndContext
           sensors={sensors}
-          collisionDetection={closestCorners}
+          collisionDetection={collisionDetection}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onDragCancel={handleDragCancel}
@@ -433,7 +460,7 @@ export default function Board() {
             })}
           </Grid>
 
-          <DragOverlay>
+          <DragOverlay dropAnimation={dropAnimation}>
             {activeTask ? (
               <Paper
                 sx={{

@@ -48,6 +48,10 @@ export default function TaskCard({ task, onEditTask, onDeleteTask }: TaskCardPro
       taskId: task.id,
       column: task.column,
     },
+    transition: {
+      duration: 180,
+      easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+    },
   });
 
   const style = {
@@ -56,15 +60,26 @@ export default function TaskCard({ task, onEditTask, onDeleteTask }: TaskCardPro
     opacity: isDragging ? 0.45 : 1,
   };
 
+  const stopPropagation = (event: React.SyntheticEvent) => {
+    event.stopPropagation();
+  };
+
   return (
     <Card
       ref={setNodeRef}
       style={style}
+      {...attributes}
+      {...listeners}
       sx={{
         mb: 1.5,
         borderColor: isDragging ? "secondary.main" : "rgba(15, 118, 110, 0.12)",
         borderWidth: 1,
         borderStyle: "solid",
+        cursor: "grab",
+        userSelect: "none",
+        "&:active": {
+          cursor: "grabbing",
+        },
       }}
     >
       <CardContent sx={{ pb: 1 }}>
@@ -73,17 +88,9 @@ export default function TaskCard({ task, onEditTask, onDeleteTask }: TaskCardPro
             {task.title}
           </Typography>
 
-          <Tooltip title="Drag task">
-            <IconButton
-              size="small"
-              {...attributes}
-              {...listeners}
-              sx={{ cursor: "grab", "&:active": { cursor: "grabbing" } }}
-              aria-label={`Drag ${task.title}`}
-            >
-              <DragIndicatorIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
+          <Box sx={{ color: "text.secondary", display: "flex", alignItems: "center", pt: 0.25 }}>
+            <DragIndicatorIcon fontSize="small" />
+          </Box>
         </Box>
 
         <Box sx={{ mt: 1 }}>
@@ -115,12 +122,26 @@ export default function TaskCard({ task, onEditTask, onDeleteTask }: TaskCardPro
 
       <CardActions sx={{ px: 1.5, pb: 1.5, justifyContent: "space-between" }}>
         <Tooltip title="Edit task">
-          <IconButton size="small" color="primary" onClick={() => onEditTask(task)} aria-label="Edit task">
+          <IconButton
+            size="small"
+            color="primary"
+            onPointerDown={stopPropagation}
+            onTouchStart={stopPropagation}
+            onClick={() => onEditTask(task)}
+            aria-label="Edit task"
+          >
             <EditOutlinedIcon fontSize="small" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Delete task">
-          <IconButton size="small" color="error" onClick={() => onDeleteTask(task)} aria-label="Delete task">
+          <IconButton
+            size="small"
+            color="error"
+            onPointerDown={stopPropagation}
+            onTouchStart={stopPropagation}
+            onClick={() => onDeleteTask(task)}
+            aria-label="Delete task"
+          >
             <DeleteOutlineIcon fontSize="small" />
           </IconButton>
         </Tooltip>

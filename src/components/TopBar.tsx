@@ -27,11 +27,16 @@ export default function TopBar({ searchTerm, onSearchTermChange }: TopBarProps) 
 
         <Box sx={{ marginLeft: "auto", width: { xs: "100%", sm: 360 } }}>
           <TextField
+            id="board-search-input"
+            name="boardSearch"
             fullWidth
             size="small"
             placeholder="Search title or description"
             value={searchTerm}
             onChange={(event) => onSearchTermChange(event.target.value)}
+            inputProps={{
+              "aria-label": "Search tasks",
+            }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

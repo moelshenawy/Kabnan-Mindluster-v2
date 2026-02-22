@@ -12,9 +12,9 @@
       "id": 2,
       "title": "Backlog Task 2",
       "description": "This is task 2 in the Backlog column for the Kanban assessment board.",
-      "column": "backlog",
-      "priority": "medium",
-      "order": 3000
+      "column": "done",
+      "priority": "hard",
+      "order": 0
     },
     {
       "id": 3,
@@ -28,9 +28,9 @@
       "id": 4,
       "title": "Backlog Task 4",
       "description": "This is task 4 in the Backlog column for the Kanban assessment board.",
-      "column": "backlog",
+      "column": "done",
       "priority": "low",
-      "order": 5000
+      "order": 500
     },
     {
       "id": 5,
@@ -38,7 +38,7 @@
       "description": "This is task 5 in the Backlog column for the Kanban assessment board.",
       "column": "backlog",
       "priority": "medium",
-      "order": 6000
+      "order": 8500
     },
     {
       "id": 6,
@@ -189,7 +189,7 @@
       "title": "Review Task 1",
       "description": "This is task 1 in the Review column for the Kanban assessment board.",
       "column": "review",
-      "priority": "low",
+      "priority": "hard",
       "order": 1000
     },
     {
