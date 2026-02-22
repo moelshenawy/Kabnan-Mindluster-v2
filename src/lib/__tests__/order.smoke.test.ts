@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildRebalancePatches, computeOrderBetween, ORDER_STEP } from "@/lib/order";
+import { buildRebalancePatches, computeOrderBetween, getTopInsertOrder, ORDER_STEP } from "@/lib/order";
 import { Task } from "@/types/task";
 
 describe("order helpers", () => {
@@ -16,11 +16,20 @@ describe("order helpers", () => {
     expect(computeOrderBetween(undefined, 2000)).toBe(2000 - ORDER_STEP);
   });
 
+  it("computes top insert order before the minimum task order", () => {
+    const tasks: Task[] = [
+      { id: 1, title: "A", description: "A", column: "backlog", order: 1000, priority: "low" },
+      { id: 2, title: "B", description: "B", column: "backlog", order: 3000, priority: "medium" },
+    ];
+
+    expect(getTopInsertOrder(tasks)).toBe(0);
+  });
+
   it("returns rebalance patches when neighboring gaps become too small", () => {
     const tasks: Task[] = [
-      { id: 1, title: "A", description: "A", column: "backlog", order: 1000 },
-      { id: 2, title: "B", description: "B", column: "backlog", order: 1000.000001 },
-      { id: 3, title: "C", description: "C", column: "backlog", order: 1000.000002 },
+      { id: 1, title: "A", description: "A", column: "backlog", order: 1000, priority: "medium" },
+      { id: 2, title: "B", description: "B", column: "backlog", order: 1000.000001, priority: "medium" },
+      { id: 3, title: "C", description: "C", column: "backlog", order: 1000.000002, priority: "medium" },
     ];
 
     const patches = buildRebalancePatches(tasks);

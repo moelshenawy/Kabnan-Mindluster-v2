@@ -22,6 +22,7 @@ function createTasks(): Task[] {
       description: "Docs task",
       column: "backlog",
       order: 1000,
+      priority: "low",
     },
     {
       id: 2,
@@ -29,6 +30,7 @@ function createTasks(): Task[] {
       description: "Board task",
       column: "backlog",
       order: 2000,
+      priority: "medium",
     },
   ];
 }
@@ -65,6 +67,7 @@ describe("task cache helpers", () => {
       description: "API task",
       column: "backlog",
       order: 1500,
+      priority: "hard",
     });
 
     expect(flattenTaskPages(updated).map((task) => task.id)).toEqual([1, 3, 2]);
@@ -79,6 +82,7 @@ describe("task cache helpers", () => {
         description: "Docs task",
         column: "backlog",
         order: 1000,
+        priority: "low",
       },
     ]);
     const params: TaskListQueryParams = {
@@ -92,6 +96,7 @@ describe("task cache helpers", () => {
       description: "No keyword",
       column: "backlog",
       order: 1000,
+      priority: "low",
     });
 
     expect(flattenTaskPages(updated).map((task) => task.id)).toEqual([]);

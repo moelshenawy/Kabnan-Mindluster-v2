@@ -24,11 +24,21 @@ export function computeOrderBetween(previousOrder?: number, nextOrder?: number):
 }
 
 export function getNextOrder(tasks: Task[]): number {
-  if (!tasks.length) {
+  const orders = tasks.map((task) => task.order).filter((order) => Number.isFinite(order));
+  if (!orders.length) {
     return ORDER_STEP;
   }
 
-  return Math.max(...tasks.map((task) => task.order)) + ORDER_STEP;
+  return Math.max(...orders) + ORDER_STEP;
+}
+
+export function getTopInsertOrder(tasks: Task[]): number {
+  const orders = tasks.map((task) => task.order).filter((order) => Number.isFinite(order));
+  if (!orders.length) {
+    return ORDER_STEP;
+  }
+
+  return Math.min(...orders) - ORDER_STEP;
 }
 
 export function shouldRebalance(tasks: Task[], minGap = 0.00001): boolean {

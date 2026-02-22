@@ -36,7 +36,7 @@ import { useInfiniteTasks } from "@/hooks/useInfiniteTasks";
 import { useUpdateTask } from "@/hooks/useUpdateTask";
 import { getApiErrorMessage } from "@/lib/api";
 import { flattenTaskPages } from "@/lib/cacheTasks";
-import { buildRebalancePatches, computeOrderBetween, getNextOrder } from "@/lib/order";
+import { buildRebalancePatches, computeOrderBetween, getTopInsertOrder } from "@/lib/order";
 import { isTaskColumn, TASK_COLUMNS, Task, TaskColumn } from "@/types/task";
 
 const PAGE_SIZE = 10;
@@ -195,12 +195,13 @@ export default function Board() {
 
   const handleSubmitDialog = (values: TaskDialogValues) => {
     if (dialogMode === "create") {
-      const order = getNextOrder(tasksByColumn[values.column]);
+      const order = getTopInsertOrder(tasksByColumn[values.column]);
       createTaskMutation.mutate(
         {
           title: values.title,
           description: values.description,
           column: values.column,
+          priority: values.priority,
           order,
         },
         {
@@ -227,6 +228,7 @@ export default function Board() {
           title: values.title,
           description: values.description,
           column: values.column,
+          priority: values.priority,
         },
         previousTask: dialogTask,
       },

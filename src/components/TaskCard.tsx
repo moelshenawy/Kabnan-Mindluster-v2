@@ -3,7 +3,7 @@
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { Box, Card, CardActions, CardContent, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Card, CardActions, CardContent, Chip, IconButton, Tooltip, Typography } from "@mui/material";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -14,6 +14,27 @@ interface TaskCardProps {
   onEditTask: (task: Task) => void;
   onDeleteTask: (task: Task) => void;
 }
+
+const PRIORITY_LABELS = {
+  low: "Low",
+  medium: "Medium",
+  hard: "Hard",
+} as const;
+
+const PRIORITY_CHIP_STYLES = {
+  low: {
+    backgroundColor: "#e5e7eb",
+    color: "#374151",
+  },
+  medium: {
+    backgroundColor: "#fef08a",
+    color: "#854d0e",
+  },
+  hard: {
+    backgroundColor: "#fecaca",
+    color: "#991b1b",
+  },
+} as const;
 
 function toTaskDndId(id: number): string {
   return `task-${id}`;
@@ -48,7 +69,7 @@ export default function TaskCard({ task, onEditTask, onDeleteTask }: TaskCardPro
     >
       <CardContent sx={{ pb: 1 }}>
         <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 600, flex: 1, lineHeight: 1.35 }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, lineHeight: 1.35, flex: 1 }} noWrap>
             {task.title}
           </Typography>
 
@@ -63,6 +84,17 @@ export default function TaskCard({ task, onEditTask, onDeleteTask }: TaskCardPro
               <DragIndicatorIcon fontSize="small" />
             </IconButton>
           </Tooltip>
+        </Box>
+
+        <Box sx={{ mt: 1 }}>
+          <Chip
+            size="small"
+            label={PRIORITY_LABELS[task.priority]}
+            sx={{
+              fontWeight: 600,
+              ...PRIORITY_CHIP_STYLES[task.priority],
+            }}
+          />
         </Box>
 
         <Typography

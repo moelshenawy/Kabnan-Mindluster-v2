@@ -32,6 +32,7 @@ export function useCreateTask() {
         title: input.title,
         description: input.description,
         column: input.column,
+        priority: input.priority,
         order: input.order ?? Date.now(),
       };
 

@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useMemo, useState } from "react";
 
-import { TASK_COLUMNS, Task, TaskColumn } from "@/types/task";
+import { TASK_COLUMNS, TASK_PRIORITIES, Task, TaskColumn, TaskPriority } from "@/types/task";
 
 const TITLE_MAX_LENGTH = 120;
 const DESCRIPTION_MAX_LENGTH = 500;
@@ -28,10 +28,17 @@ const COLUMN_LABELS: Record<TaskColumn, string> = {
   done: "Done",
 };
 
+const PRIORITY_LABELS: Record<TaskPriority, string> = {
+  low: "Low",
+  medium: "Medium",
+  hard: "Hard",
+};
+
 export interface TaskDialogValues {
   title: string;
   description: string;
   column: TaskColumn;
+  priority: TaskPriority;
 }
 
 interface TaskDialogProps {
@@ -50,6 +57,7 @@ function buildInitialValues(mode: "create" | "edit", task: Task | undefined, def
       title: task.title,
       description: task.description,
       column: task.column,
+      priority: task.priority,
     };
   }
 
@@ -57,6 +65,7 @@ function buildInitialValues(mode: "create" | "edit", task: Task | undefined, def
     title: "",
     description: "",
     column: defaultColumn,
+    priority: "medium" as TaskPriority,
   };
 }
 
@@ -106,6 +115,10 @@ export default function TaskDialog({
     setValues((current) => ({ ...current, column: event.target.value as TaskColumn }));
   };
 
+  const handlePriorityChange = (event: SelectChangeEvent<TaskPriority>) => {
+    setValues((current) => ({ ...current, priority: event.target.value as TaskPriority }));
+  };
+
   const handleSubmit = () => {
     setShowErrors(true);
     const title = values.title.trim();
@@ -119,6 +132,7 @@ export default function TaskDialog({
       title,
       description,
       column: values.column,
+      priority: values.priority,
     });
   };
 
@@ -159,6 +173,22 @@ export default function TaskDialog({
               {TASK_COLUMNS.map((column) => (
                 <MenuItem key={column} value={column}>
                   {COLUMN_LABELS[column]}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl>
+            <InputLabel id="task-priority-label">Priority</InputLabel>
+            <Select<TaskPriority>
+              labelId="task-priority-label"
+              label="Priority"
+              value={values.priority}
+              onChange={handlePriorityChange}
+            >
+              {TASK_PRIORITIES.map((priority) => (
+                <MenuItem key={priority} value={priority}>
+                  {PRIORITY_LABELS[priority]}
                 </MenuItem>
               ))}
             </Select>

@@ -26,6 +26,13 @@ function toColumnDndId(column: TaskColumn): string {
   return `column-${column}`;
 }
 
+const COLUMN_STATUS_COLORS: Record<TaskColumn, string> = {
+  backlog: "#dc2626",
+  in_progress: "#facc15",
+  review: "#7c3aed",
+  done: "#16a34a",
+};
+
 export default function Column({
   column,
   title,
@@ -61,7 +68,17 @@ export default function Column({
       }}
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1.5 }}>
-        <Typography variant="h6">{title}</Typography>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box
+            sx={{
+              width: 10,
+              height: 10,
+              borderRadius: "50%",
+              backgroundColor: COLUMN_STATUS_COLORS[column],
+            }}
+          />
+          <Typography variant="h6">{title}</Typography>
+        </Box>
         <Typography variant="body2" color="text.secondary">
           {totalCount}
         </Typography>
@@ -85,7 +102,12 @@ export default function Column({
           <Box sx={{ flex: 1 }}>
             {tasks.length ? (
               tasks.map((task) => (
-                <TaskCard key={task.id} task={task} onEditTask={onEditTask} onDeleteTask={onDeleteTask} />
+                <TaskCard
+                  key={task.id}
+                  task={task}
+                  onEditTask={onEditTask}
+                  onDeleteTask={onDeleteTask}
+                />
               ))
             ) : (
               <Typography variant="body2" color="text.secondary" sx={{ py: 2 }}>
